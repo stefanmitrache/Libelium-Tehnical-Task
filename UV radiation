@@ -11,29 +11,28 @@
 
 */
 // WiFi AP settings (CHANGE TO USER'S AP)
-///////////////////////////////////////
+
 char SSID[] = "LANCOMBEIA";
 char PASSW[] = "beialancom";
-///////////////////////////////////////
+
 // choose socket (SELECT USER'S SOCKET)
-///////////////////////////////////////
+
 uint8_t socket = SOCKET0;
-///////////////////////////////////////
+
 
 radiationClass radSensor;
+
 //variables to store sensors readings
 
 float radiation;
 float UVvalue;
 
-// variable to store the number of pending pulses
-//int pendingPulses;
 // choose HTTP server settings
-///////////////////////////////////////
+
 char type[] = "http";
 char host[] = "82.78.81.178";
 uint16_t port = 80;
-///////////////////////////////////////
+
 
 uint8_t error;
 uint8_t status;
@@ -48,10 +47,9 @@ void setup()
   USB.println(F("Frame Utility Example for AGRO Pro Board"));
   USB.println(F("Sensors used:"));
   USB.println(F("- SOCKET_B: solar radiation"));
-//////////////////////////////////////////////////
-//////////////////////////////////////////////////
+
   // 1. Switch ON the WiFi module
-  //////////////////////////////////////////////////
+
   error = WIFI_PRO_V3.ON(socket);
 
   if (error == 0)
@@ -64,9 +62,9 @@ void setup()
   }
 
 
-  //////////////////////////////////////////////////
+
   // 2. Reset to default values
-  //////////////////////////////////////////////////
+
   error = WIFI_PRO_V3.resetValues();
 
   if (error == 0)
@@ -79,9 +77,8 @@ void setup()
     USB.println(error, DEC);
   }
 
-  //////////////////////////////////////////////////
   // 3. Configure mode (Station or AP)
-  //////////////////////////////////////////////////
+
   error = WIFI_PRO_V3.configureMode(WaspWIFI_v3::MODE_STATION);
 
   if (error == 0)
@@ -97,10 +94,8 @@ void setup()
   // get current time
   previous = millis();
 
-
-  //////////////////////////////////////////////////
   // 4. Configure SSID and password and autoconnect
-  //////////////////////////////////////////////////
+
   error = WIFI_PRO_V3.configureStation(SSID, PASSW, WaspWIFI_v3::AUTOCONNECT_ENABLED);
 
   if (error == 0)
@@ -163,9 +158,9 @@ void setup()
 void loop()
 {
   USB.println(RTC.getTime());
-    //////////////////////////////////////////////////
+
   // 1. Switch ON
-  //////////////////////////////////////////////////
+
   error = WIFI_PRO_V3.ON(socket);
 
   if (error == 0)
@@ -179,17 +174,15 @@ void loop()
 
   // check connectivity
   status =  WIFI_PRO_V3.isConnected();
-  /////////////////////////////////////////////
+
 
     // switch on sensor board
     Agriculture.ON();
     USB.print(F("Time:"));
     USB.println(RTC.getTime());
 
-    // measure sensors
-///////////////////////////////////////////
+
   // 3. Read sensors
-  ///////////////////////////////////////////
 
   //It takes several minutes to read all sensors
 
@@ -204,16 +197,13 @@ void loop()
   USB.print("Solar Radiation: ");
   USB.println(radiation);// show value
   
-  ///////////////////////////////////////////
   // 4. Create ASCII frame
-  ///////////////////////////////////////////
 
   // Create new frame (ASCII)
   frame.createFrame(ASCII);
   
   // Add radiation
   frame.addSensor(SENSOR_AGR_PAR, radiation);
- 
 
   // Show the frame
   frame.showFrame();
@@ -222,19 +212,13 @@ void loop()
 
 delay(2000);
 
-  ///////////////////////////////////////////
   // 7. Sleep
-  ///////////////////////////////////////////
-
-
 
   // check if module is connected
   if (status == true)
   {
    
-    ///////////////////////////////
     // 3.2. Send Frame to Meshlium
-    ///////////////////////////////
 
     // http frame
     error = WIFI_PRO_V3.sendFrameToMeshlium( type, host, port, frame.buffer, frame.length);
@@ -258,9 +242,9 @@ delay(2000);
   {
     USB.print(F("2. WiFi is connected ERROR"));
   }
-  //////////////////////////////////////////////////
+
   // 3. Switch OFF
-  //////////////////////////////////////////////////
+
   WIFI_PRO_V3.OFF(socket);
   USB.println(F("WiFi switched OFF\n\n"));
   USB.println(F("---------------------------------"));
@@ -275,7 +259,3 @@ delay(2000);
   //  USB.println(RTC.getWatchdog());
   USB.println(F("****************************************"));
 }
-
-
-
-
